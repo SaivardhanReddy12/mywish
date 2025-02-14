@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Birthday Surprise</title>
+  <style>
+    /* Basic page styling */
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      transition: background 1s;
+    }
+    /* Container to center buttons and messages */
+    #centerContent {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      width: 90%;
+    }
+    .hidden {
+      display: none;
+    }
+    .btn {
+      background: #ff00ff;
+      color: #060505;
+      border: none;
+      padding: 15px 20px;
+      font-size: 18px;
+      margin: 20px;
+      cursor: pointer;
+      border-radius: 10px;
+    }
+    /* Cute pastel background transition for the body */
+    .cute {
+      animation: cuteTransition 8s infinite;
+    }
+    @keyframes cuteTransition {
+      0%   { background-color: #ffcccc; } /* light pink */
+      33%  { background-color: #ccffff; } /* light cyan */
+      66%  { background-color: #bebe98; } /* light yellow */
+      100% { background-color: #723030; }
+    }
+    /* Balloon styling and animations */
+    .balloon {
+      width: 50px;
+      height: 70px;
+      position: absolute;
+      border-radius: 50%;
+      bottom: -100px;
+      animation: rise 4s forwards, bob 2s infinite 4s;
+    }
+    @keyframes rise {
+      from { bottom: -100px; opacity: 0; }
+      to { bottom: 90%; opacity: 1; }
+    }
+    @keyframes bob {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0); }
+    }
+    /* Editable birthday wish styling */
+    #birthdayWish {
+      font-size: 16px;
+      border: 2px solid #fff;
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.5);
+      width: 80%;
+      margin: 20px auto;
+    }
+    /* Completed Reading Message button fixed at the bottom */
+    #completeMsgBtn {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(45deg, #e36262, #358686, #e4e42b);
+      animation: cuteTransition 8s infinite;
+    }
+    /* Container for the argument question */
+    #argContainer {
+      margin-top: 20px;
+    }
+    /* Final teddy container */
+    #teddyContainer {
+      margin-top: 20px;
+    }
+    #teddyContainer img {
+      max-width: 200px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Centered content container -->
+  <div id="centerContent">
+    <!-- Step 1: Pitch dark with a button to turn on lights -->
+    <button id="lightsBtn" class="btn" onclick="turnOnLights()">It's so dark here, let's turn on the lights</button>
+    
+    <!-- Step 2: Button to play music (music plays continuously after clicking) -->
+    <button id="musicBtn" class="btn hidden" onclick="playMusic()">It's so quiet, let's turn on some music</button>
+    
+    <!-- Step 3: Button to decorate -->
+    <button id="decorateBtn" class="btn hidden" onclick="decorate()">Let's decorate</button>
+    
+    <!-- Step 4: Button to show birthday message -->
+    <button id="showMsgBtn" class="btn hidden" onclick="showMessage()">Show Message</button>
+    
+    <!-- Birthday message container (editable) -->
+    <div id="wishContainer" class="hidden">
+      <p id="birthdayWish" contenteditable="true">
+        Happy Birthday Vaishnavi ! no long texts else you would brag about my writing,Every single day we talk _whether it's about random nonsense or u reminding me all about my work i convenientaly "forget".You sleepyhead,somehow manage to be the most energetic person when it comes to scolding me but the laziest when it comes to something else,You're just amazing and chaotic ,i call u many names teasingly ,but deep down,you're the person who makes my days a little more brighter,my mess a liitle more manageable,and  i might pretend to be annoyed when you correct me,but the truth is ,i wouldn't have it any other way,On your special day i just want to say thank you-for being who  you are ,for being here,and for being the most incredible friend that you are, i know you have been a feeling low lately becoz of the clgmates,frnds but i am happy you are really coping up its genuinely their loss if they miss out a gem like you ,wishing you all the happiness you deserve today and always.Once again HAPPY BIRTHDAY my PSYCH my COMFORT PERSON,my SLEEPYHEAD,my HEADACHE!stay the same (but maybe go easy on my hands this year?)
+      </p>
+    </div>
+    
+    <!-- Fun yes/no question container -->
+    <div id="argContainer" class="hidden">
+      <p style="font-size:20px;">Will you stop hitting me?</p>
+      <button id="argYes" class="btn" onclick="finalSurprise()">Yes</button>
+      <button id="argNo" class="btn" onclick="noClicked()">No</button>
+    </div>
+    
+    <!-- Final teddy surprise -->
+    <div id="teddyContainer" class="hidden">
+      <img src="https://media.istockphoto.com/id/1461182793/vector/cute-teddy-bear-winking-eye-with-red-heart-cartoon-vector-illustration.jpg?s=612x612&w=0&k=20&c=HyZ1KmOp8h155HqNmYVlWQ4fEL7AzDs5KuWU-i6HM6c=" alt="Cute Teddy" />
+      <p style="font-size:24px;">Thank you psychy</p>
+    </div>
+  </div>
+  
+  <!-- Completed Reading Message button fixed at bottom -->
+  <button id="completeMsgBtn" class="btn hidden" onclick="completeMessage()">Completed Reading Message</button>
+  
+  <!-- Birthday song audio (will play continuously) -->
+  <audio id="birthdaySong" src="c:\Users\user\Downloads\happy-birthday-266285.mp3"></audio>
+  
+  <script>
+    // Global variables for scaling the argument buttons
+    let yesScale = 1;
+    let noScale = 1;
+    
+    // Step 1: Turn on lights (apply cute pastel background)
+    function turnOnLights() {
+      document.body.classList.add("cute");
+      document.getElementById("lightsBtn").classList.add("hidden");
+      document.getElementById("musicBtn").classList.remove("hidden");
+    }
+    
+    // Step 2: Play music (the music will play continuously)
+    function playMusic() {
+      document.getElementById("birthdaySong").play();
+      document.getElementById("musicBtn").classList.add("hidden");
+      document.getElementById("decorateBtn").classList.remove("hidden");
+    }
+    
+    // Step 3: Decorate the page (create balloons)
+    function decorate() {
+      const balloonCount = 10;
+      // Create 10 balloons evenly spaced along the top
+      for (let i = 0; i < balloonCount; i++) {
+        let balloon = document.createElement("div");
+        balloon.classList.add("balloon");
+        // Calculate even spacing: (i+1)/(balloonCount+1)*100 vw
+        let leftPos = ((i + 1) / (balloonCount + 1)) * 100;
+        balloon.style.left = leftPos + "vw";
+        // Assign a random pastel color
+        balloon.style.background = `hsl(${Math.random() * 360}, 70%, 80%)`;
+        document.body.appendChild(balloon);
+      }
+      document.getElementById("decorateBtn").classList.add("hidden");
+      // Show the "Show Message" button
+      document.getElementById("showMsgBtn").classList.remove("hidden");
+    }
+    
+    // Step 4: Display birthday message when "Show Message" is clicked
+    function showMessage() {
+      document.getElementById("showMsgBtn").classList.add("hidden");
+      document.getElementById("wishContainer").classList.remove("hidden");
+      // Show the Completed Reading Message button fixed at the bottom
+      document.getElementById("completeMsgBtn").classList.remove("hidden");
+    }
+    
+    // New Step: When Completed Reading Message button is clicked,
+    // hide the birthday message so it doesn't show again, and show the fun yes/no question
+    function completeMessage() {
+      document.getElementById("completeMsgBtn").classList.add("hidden");
+      document.getElementById("wishContainer").classList.add("hidden");
+      document.getElementById("argContainer").classList.remove("hidden");
+    }
+    
+    // Step 5: On clicking "No", adjust button sizes (Yes grows, No shrinks)
+    function noClicked() {
+      yesScale *= 1.1;
+      noScale *= 0.9;
+      document.getElementById("argYes").style.transform = "scale(" + yesScale + ")";
+      document.getElementById("argNo").style.transform = "scale(" + noScale + ")";
+    }
+    
+    // Step 6: Final surprise when "Yes" is clicked (hide question and show teddy bear)
+    function finalSurprise() {
+      document.getElementById("argContainer").classList.add("hidden");
+      document.getElementById("teddyContainer").classList.remove("hidden");
+    }
+  </script>
+</body>
+</html>
